@@ -1,0 +1,192 @@
+---
+title: "API reference"
+description: "Review Xpdite's REST routes, WebSocket protocol, and internal mobile integration endpoints."
+---
+
+## Base behavior
+
+- REST routes live under `/api/*`
+- Real-time chat and streaming use `/ws`
+- Internal mobile integration uses `/internal/mobile/*`
+- The backend binds to loopback by default and selects the first free port from `8000` through `8009`
+
+<Warning>
+  `/internal/mobile/*` is a local integration surface for the Channel Bridge. It is not a public internet API and should remain loopback-only.
+</Warning>
+
+## Common conventions
+
+- JSON is used unless a route says otherwise.
+- FastAPI errors typically return `{ "detail": "..." }`.
+- Artifact endpoints may require the `X-Xpdite-Server-Token` header.
+- Marketplace endpoints use the same local-access guard pattern as artifact endpoints.
+
+## REST routes
+
+### Health
+
+- `GET /api/health`
+
+### Models and keys
+
+- `GET /api/models/ollama`
+- `GET /api/models/ollama/info/{model_name:path}`
+- `GET /api/models/enabled`
+- `PUT /api/models/enabled`
+- `GET /api/models/anthropic`
+- `GET /api/models/openai`
+- `GET /api/models/gemini`
+- `GET /api/models/openrouter`
+- `GET /api/keys`
+- `PUT /api/keys/{provider}`
+- `DELETE /api/keys/{provider}`
+
+### Artifacts
+
+- `GET /api/artifacts`
+- `GET /api/artifacts/conversation/{conversation_id}`
+- `GET /api/artifacts/{artifact_id}`
+- `POST /api/artifacts`
+- `PUT /api/artifacts/{artifact_id}`
+- `DELETE /api/artifacts/{artifact_id}`
+
+### Marketplace
+
+- `GET /api/marketplace/sources`
+- `POST /api/marketplace/sources`
+- `DELETE /api/marketplace/sources/{source_id}`
+- `POST /api/marketplace/sources/{source_id}/refresh`
+- `GET /api/marketplace/catalog`
+- `GET /api/marketplace/installs`
+- `POST /api/marketplace/install`
+- `POST /api/marketplace/install-package`
+- `POST /api/marketplace/install-repo`
+- `POST /api/marketplace/installs/{install_id}/enable`
+- `POST /api/marketplace/installs/{install_id}/disable`
+- `POST /api/marketplace/installs/{install_id}/update`
+- `DELETE /api/marketplace/installs/{install_id}`
+- `PUT /api/marketplace/installs/{install_id}/secrets`
+
+### Memory
+
+- `GET /api/memory`
+- `GET /api/memory/file`
+- `PUT /api/memory/file`
+- `DELETE /api/memory/file`
+- `DELETE /api/memory`
+- `GET /api/settings/memory`
+- `PUT /api/settings/memory`
+
+### Settings and MCP
+
+- `GET /api/settings/tools`
+- `PUT /api/settings/tools`
+- `GET /api/settings/sub-agents`
+- `PUT /api/settings/sub-agents`
+- `GET /api/settings/system-prompt`
+- `PUT /api/settings/system-prompt`
+- `GET /api/mcp/servers`
+
+### Skills
+
+- `GET /api/skills`
+- `GET /api/skills/{name}/content`
+- `POST /api/skills`
+- `PUT /api/skills/{name}`
+- `PATCH /api/skills/{name}/toggle`
+- `DELETE /api/skills/{name}`
+- `POST /api/skills/{name}/references`
+
+### Integrations
+
+- `GET /api/google/status`
+- `POST /api/google/connect`
+- `POST /api/google/disconnect`
+- `GET /api/external-connectors`
+- `POST /api/external-connectors/{name}/connect`
+- `POST /api/external-connectors/{name}/disconnect`
+- `GET /api/mobile-channels/config`
+- `PUT /api/mobile-channels/config/{platform_id}`
+
+### Scheduled jobs and notifications
+
+- `GET /api/scheduled-jobs`
+- `GET /api/scheduled-jobs/{job_id}`
+- `POST /api/scheduled-jobs`
+- `PUT /api/scheduled-jobs/{job_id}`
+- `DELETE /api/scheduled-jobs/{job_id}`
+- `POST /api/scheduled-jobs/{job_id}/pause`
+- `POST /api/scheduled-jobs/{job_id}/resume`
+- `POST /api/scheduled-jobs/{job_id}/run-now`
+- `GET /api/scheduled-jobs/conversations`
+- `GET /api/scheduled-jobs/{job_id}/conversations`
+- `GET /api/notifications`
+- `GET /api/notifications/count`
+- `DELETE /api/notifications/{notification_id}`
+- `DELETE /api/notifications`
+
+### Terminal and files
+
+- `GET /api/terminal/settings`
+- `PUT /api/terminal/settings/ask-level`
+- `DELETE /api/terminal/approvals`
+- `GET /api/files/browse`
+
+### Internal mobile API
+
+- `POST /internal/mobile/message`
+- `POST /internal/mobile/command`
+- `POST /internal/mobile/pair/verify`
+- `POST /internal/mobile/pair/check`
+- `POST /internal/mobile/pair/generate`
+- `GET /internal/mobile/devices`
+- `DELETE /internal/mobile/devices/{device_id}`
+- `POST /internal/mobile/whatsapp/connection`
+- `GET /internal/mobile/sessions`
+- `GET /internal/mobile/session/{platform}/{sender_id}`
+- `DELETE /internal/mobile/session/{platform}/{sender_id}`
+- `GET /internal/mobile/health`
+- `POST /internal/mobile/cleanup`
+
+## WebSocket protocol
+
+Message envelopes use:
+
+```json
+{
+  "type": "message_type",
+  "tab_id": "default",
+  "content": "..."
+}
+```
+
+### Client to server
+
+- Tab lifecycle: `tab_created`, `tab_closed`, `tab_activated`
+- Chat flow: `submit_query`, `retry_message`, `edit_message`, `set_active_response`
+- Conversation management: `clear_context`, `resume_conversation`, `load_conversation`, `delete_conversation`, `get_conversations`, `search_conversations`
+- Queue and cancellation: `stop_streaming`, `cancel_queued_item`
+- Screenshots and capture: `remove_screenshot`, `set_capture_mode`
+- Terminal control: `terminal_approval_response`, `terminal_session_response`, `terminal_stop_session`, `terminal_kill_command`, `terminal_set_ask_level`, `terminal_resize`
+- YouTube approval: `youtube_transcription_approval_response`
+- Meeting recorder: `meeting_start_recording`, `meeting_stop_recording`, `meeting_audio_chunk`, `get_meeting_recordings`, `load_meeting_recording`, `delete_meeting_recording`, `search_meeting_recordings`, `meeting_get_status`, `meeting_get_compute_info`, `meeting_get_settings`, `meeting_update_settings`, `meeting_generate_analysis`, `meeting_execute_action`
+- Ollama pull: `ollama_pull_model`, `ollama_cancel_pull`
+
+### Server to client
+
+- Base readiness: `ready`, `error`
+- Screenshots: `screenshot_start`, `screenshot_added`, `screenshot_removed`, `screenshots_cleared`, `screenshot_ready`
+- Chat streaming: `query`, `thinking_chunk`, `thinking_complete`, `response_chunk`, `response_complete`, `token_usage`
+- Tools and artifacts: `tool_call`, `tool_calls_summary`, `artifact_start`, `artifact_chunk`, `artifact_complete`, `artifact_deleted`
+- Conversations: `context_cleared`, `conversation_saved`, `conversations_list`, `conversation_loaded`, `conversation_deleted`, `conversation_resumed`
+- Queue: `queue_full`, `query_queued`, `queue_updated`, `ollama_queue_status`
+- Terminal: `terminal_approval_request`, `terminal_session_request`, `terminal_session_started`, `terminal_session_ended`, `terminal_running_notice`, `terminal_output`, `terminal_command_complete`
+- Meeting and notifications: `meeting_*`, `notification_added`, `notification_dismissed`, `notifications_cleared`
+- Mobile stop acknowledgement: `generation_stopped`
+
+## Related docs
+
+- [Architecture](/reference/architecture)
+- [MCP guide](/integrations/mcp-guide)
+- [Mobile Bridge](/integrations/mobile-bridge)
+- [Security](/reference/security)

@@ -1,0 +1,72 @@
+---
+title: "Operations"
+description: "Operate, observe, and recover Xpdite's local runtime safely."
+---
+
+## Runtime components
+
+- Electron host process
+- Python backend
+- Channel Bridge process
+- Optional local Ollama daemon
+
+## Health endpoints
+
+- Backend: `GET /api/health`
+- Internal mobile API: `GET /internal/mobile/health`
+- Bridge: `GET http://127.0.0.1:<bridge_port>/health`
+
+## Startup behavior
+
+- The backend chooses the first free port in `8000` through `8009`.
+- The bridge defaults to `9000` and may increment if that port is occupied.
+- Electron waits for backend health before marking the app ready.
+- Previously enabled external connectors and enabled marketplace installs are reconciled during startup.
+
+## Logs and diagnostics
+
+- Python emits boot markers prefixed with `XPDITE_BOOT`.
+- The bridge emits structured logs prefixed with `CHANNEL_BRIDGE_MSG`.
+- Development logs appear in the terminals running the dev processes.
+- You can enable verbose mobile logs with `XPDITE_MOBILE_DEBUG_LOGS=1`.
+
+## Data locations
+
+The user data directory typically contains:
+
+- `xpdite_app.db`
+- `artifacts/`
+- `memory/`
+- `screenshots/`
+- `skills/`
+- `mobile_channels_config.json`
+- Google token data after OAuth
+
+## Routine checks
+
+1. Verify `GET /api/health`.
+2. Confirm expected model providers appear in **Settings**.
+3. Confirm jobs show valid next-run metadata if scheduling is enabled.
+4. Confirm bridge and platform status if mobile channels are enabled.
+
+## Common recovery actions
+
+- Restart the app to reset process topology.
+- Re-save mobile platform config to regenerate the bridge config snapshot.
+- Reconnect Google providers if token state is stale.
+- Reinstall dependencies if a local dev environment drifts.
+
+## Security recovery
+
+If you suspect exposure or credential compromise:
+
+1. Rotate provider API keys.
+2. Reconnect Google integrations.
+3. Revoke and re-pair mobile devices.
+4. Confirm backend and bridge services are still loopback-bound.
+
+## Related docs
+
+- [Security](/reference/security)
+- [Troubleshooting](/reference/troubleshooting)
+- [Configuration](/reference/configuration)

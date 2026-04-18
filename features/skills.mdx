@@ -1,0 +1,54 @@
+---
+title: "Skills"
+description: "Use builtin and user-defined skills to inject focused instructions into model context."
+---
+
+## Skill types
+
+- **Builtin skills** are seeded from the repository.
+- **User skills** are created and stored in user data.
+
+## Builtin skills
+
+Current builtin skills include:
+
+| Skill | Primary use |
+|---|---|
+| `terminal` | Command execution and PTY workflows |
+| `filesystem` | Read, write, move, and search local files |
+| `websearch` | Search the web and read websites |
+| `gmail` | Read and send email after Google auth |
+| `calendar` | Manage Google Calendar after Google auth |
+| `browser` | Browser automation through terminal-driven Playwright workflows |
+| `youtube` | Analyze YouTube content with captions first and fallback transcription |
+
+## How skills are used
+
+- You can trigger skills explicitly with slash commands.
+- The backend also exposes skills through inline tools for model-driven retrieval and injection.
+- Skills can include reference files for extra context.
+
+## Skill lifecycle
+
+You can manage skills from the UI or API.
+
+- List all skills
+- Read one skill's `SKILL.md`
+- Create, update, toggle, or delete user skills
+- Add markdown reference files to a skill
+
+## Relevant endpoints
+
+- `GET /api/skills`
+- `GET /api/skills/{name}/content`
+- `POST /api/skills`
+- `PUT /api/skills/{name}`
+- `PATCH /api/skills/{name}/toggle`
+- `DELETE /api/skills/{name}`
+- `POST /api/skills/{name}/references`
+
+## Related docs
+
+- [MCP guide](/integrations/mcp-guide)
+- [API reference](/reference/api-reference)
+- [Features overview](/features/overview)

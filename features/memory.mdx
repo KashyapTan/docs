@@ -1,0 +1,61 @@
+---
+title: "Memory"
+description: "Store durable markdown knowledge with controlled paths, settings, and MCP tools."
+---
+
+## Purpose
+
+Xpdite memory preserves long-term context across sessions while keeping it transparent and editable.
+
+## Storage model
+
+- Root directory: `user_data/memory/`
+- Format: markdown file with metadata front matter and body text
+- Default categories:
+
+| Category | Typical content |
+|---|---|
+| `profile/` | Stable user preferences and identity |
+| `semantic/` | Facts and reference knowledge |
+| `episodic/` | Events and session-specific history |
+| `procedural/` | Repeatable workflows and instructions |
+
+## Safety model
+
+Memory paths must be:
+
+- relative
+- non-traversing
+- non-absolute
+- `.md` files
+- inside the configured memory root after resolution
+
+Writes use locking and atomic replace semantics to reduce corruption risk.
+
+## Runtime behavior
+
+- Memory can be listed, read, updated, deleted, or fully reset through the API.
+- Profile memory auto-injection is controlled by settings.
+- Memory is also exposed to the model through inline MCP tools.
+
+## Endpoints and tools
+
+- `GET /api/memory`
+- `GET /api/memory/file`
+- `PUT /api/memory/file`
+- `DELETE /api/memory/file`
+- `DELETE /api/memory`
+- `GET /api/settings/memory`
+- `PUT /api/settings/memory`
+
+Memory tools:
+
+- `memlist`
+- `memread`
+- `memcommit`
+
+## Related docs
+
+- [Configuration](/reference/configuration)
+- [API reference](/reference/api-reference)
+- [Features overview](/features/overview)

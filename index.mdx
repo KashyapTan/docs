@@ -1,97 +1,82 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Xpdite"
+description: "Desktop AI workspace with screenshots, tools, memory, scheduling, and mobile channels."
 ---
 
-## Setting up
+Xpdite is an always-on-top Windows desktop app that combines an Electron shell, a React UI, a Python backend, and MCP-powered tools. You can capture your screen, chat across isolated tabs, switch between local and cloud models, run terminal or retrieval workflows, and send conversations to mobile channels.
 
-Get your documentation site up and running in minutes.
+<Frame>
+  <img
+    src="/images/demo-2.png"
+    alt="Xpdite assisting with a coding problem while a screenshot is attached to the active tab."
+    style={{ borderRadius: '0.75rem' }}
+  />
+</Frame>
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+## Start here
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Install Xpdite, choose a model path, and send your first prompt.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Feature map" icon="grid-2" href="/features/overview">
+    See the full product surface before you dive into a specific workflow.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Models and providers" icon="cpu" href="/features/models-and-providers">
+    Use Ollama locally or connect Anthropic, OpenAI, Gemini, and OpenRouter.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Marketplace" icon="store" href="/integrations/marketplace">
+    Install skills, plugins, and MCP bundles from curated sources or direct repos.
   </Card>
-</Columns>
+  <Card title="Troubleshooting" icon="life-ring" href="/reference/troubleshooting">
+    Fix startup, model, tool, and mobile integration issues.
+  </Card>
+</CardGroup>
 
-## Create beautiful pages
+## What you can do
 
-Everything you need to create world-class documentation.
+<CardGroup cols={2}>
+  <Card title="Chat with tab isolation" icon="messages" href="/features/chat-and-tabs">
+    Keep multiple conversations open with independent screenshot and queue state.
+  </Card>
+  <Card title="Use MCP and inline tools" icon="wrench" href="/integrations/mcp-guide">
+    Search files, browse the web, run terminal commands, and chain tools into responses.
+  </Card>
+  <Card title="Extend from the marketplace" icon="store" href="/integrations/marketplace">
+    Add Claude-compatible skills, plugins, and MCP packages without editing the codebase.
+  </Card>
+  <Card title="Keep memory and artifacts" icon="brain" href="/features/memory">
+    Persist long-term knowledge and generated outputs across sessions.
+  </Card>
+  <Card title="Automate recurring work" icon="calendar-clock" href="/features/scheduled-jobs">
+    Schedule jobs, receive notifications, and optionally deliver output to mobile channels.
+  </Card>
+</CardGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Architecture at a glance
 
-## Need inspiration?
+- **Electron host** manages the window, IPC, Python lifecycle, and Channel Bridge lifecycle.
+- **React renderer** owns chat, tabs, settings, history, meeting recorder, and streaming UI.
+- **Python backend** runs REST, WebSocket, LLM routing, persistence, scheduler, and tool execution.
+- **Channel Bridge** connects Telegram, Discord, and WhatsApp to Xpdite over loopback APIs.
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<Note>
+  Xpdite is documented as a local-first Windows app. Internal loopback APIs and placeholder connectors are called out explicitly instead of being presented as public internet services.
+</Note>
+
+## Build and extend Xpdite
+
+<CardGroup cols={2}>
+  <Card title="API reference" icon="terminal" href="/reference/api-reference">
+    Review REST routes, WebSocket message types, and internal mobile endpoints.
+  </Card>
+  <Card title="Development guide" icon="code" href="/development">
+    Work on the Electron, React, Python, and MCP layers with the correct boundaries.
+  </Card>
+  <Card title="Architecture" icon="diagram-project" href="/reference/architecture">
+    Understand the four-runtime system and how boot, tabs, and tools fit together.
+  </Card>
+  <Card title="Contributing" icon="git-pull-request" href="/reference/contributing">
+    Open focused pull requests with tests, docs updates, and clear validation notes.
+  </Card>
+</CardGroup>

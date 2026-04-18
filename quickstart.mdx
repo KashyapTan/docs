@@ -1,80 +1,68 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Install Xpdite, configure a model path, and send your first screenshot-aware prompt."
 ---
 
-## Get started in three steps
+## Start using Xpdite
 
-Get your documentation site running locally and make your first customization.
+Use this guide if you want to install the desktop app and reach a working first prompt quickly.
 
-### Step 1: Set up your local environment
+<Info>
+  **Platform support**
+  - Windows 10 or Windows 11
+  - Ollama is optional, but required for local models
+  - Cloud providers are optional, but require your own API keys
+</Info>
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+<Steps>
+  <Step title="Install Xpdite">
+    Download the latest Windows build from the [Xpdite releases page](https://github.com/KashyapTan/Xpdite/releases).
 
-### Step 2: Deploy your changes
+    If SmartScreen appears because the app is not code-signed yet, verify that the installer came from the official GitHub releases page before you continue.
+  </Step>
+  <Step title="Choose your model path">
+    If you want local inference, install Ollama and pull the default model:
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    ```bash
+    ollama pull qwen3-vl:8b-instruct
+    ```
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    If you want cloud models, open **Settings** after first launch and add a key for Anthropic, OpenAI, Gemini, or OpenRouter.
+  </Step>
+  <Step title="Send your first prompt">
+    Launch Xpdite, wait for the boot screen to finish, then:
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+    1. Press `Alt + .` to capture a screenshot into the active tab.
+    2. Type your request.
+    3. Press `Enter` to submit.
 
-### Step 3: Go live
+    You should see a streaming response, screenshot chips in the active tab, and working settings pages.
+  </Step>
+</Steps>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+## Optional setup
 
-## Next steps
-
-Now that you have your docs running, explore these key features:
+- Connect Google in **Settings** > **Connections** if you want Gmail and Calendar MCP tools.
+- Open **Settings** > **Marketplace** if you want to install extra skills, plugins, or MCP bundles.
+- Configure terminal approval level if you plan to let the model run shell commands.
+- Pair Telegram, Discord, or WhatsApp in **Settings** > **Mobile** if you want remote access.
+- Enable only the models you want visible in the app to keep the selector focused.
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Feature overview" icon="grid-2" href="/features/overview">
+    See the full product map before you customize the app.
+  </Card>
+  <Card title="Models and providers" icon="cpu" href="/features/models-and-providers">
+    Compare local and cloud setup paths.
+  </Card>
+  <Card title="MCP guide" icon="wrench" href="/integrations/mcp-guide">
+    Understand how Xpdite discovers and executes tools.
+  </Card>
+  <Card title="Troubleshooting" icon="life-ring" href="/reference/troubleshooting">
+    Diagnose boot, model, tool, and mobile issues.
+  </Card>
 </CardGroup>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Xpdite is designed around a local-first trust model. If you bind backend services to a non-loopback interface, review [security](/reference/security) before you expose anything.
 </Note>

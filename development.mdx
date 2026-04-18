@@ -1,94 +1,84 @@
 ---
-title: 'Development'
-description: 'Preview changes locally to update your docs'
+title: "Development"
+description: "Build, run, test, and extend the Xpdite desktop app and this Mintlify docs site."
 ---
 
 <Info>
   **Prerequisites**:
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
+  - Bun
+  - Python 3.13+
+  - UV
+  - Git
+  - Mintlify CLI if you want to preview the docs site
 </Info>
 
-Follow these steps to install and run Mintlify on your operating system.
+## Install dependencies
 
 <Steps>
-<Step title="Install the Mintlify CLI">
+  <Step title="Clone and install">
+
+  ```bash
+  git clone https://github.com/KashyapTan/Xpdite.git
+  cd Xpdite
+  bun install
+  bun run install:python
+  ```
+  </Step>
+  <Step title="Run the app in development">
+
+  ```bash
+  bun run dev
+  ```
+
+  This starts the Vite renderer, the Electron main process, the Python backend, and the Ollama startup helper. The Channel Bridge starts after the backend passes health checks.
+  </Step>
+</Steps>
+
+## Run services individually
+
+```bash
+bun run dev:react
+bun run dev:electron
+bun run dev:pyserver
+```
+
+## Build and validate
+
+```bash
+bun run build
+bun run lint
+bun run dist:win
+```
+
+## Preview the docs site
+
+If you are editing this Mintlify documentation site, run the following commands from the docs repository root:
 
 ```bash
 npm i -g mint
-```
-</Step>
-
-<Step title="Preview locally">
-
-Navigate to your docs directory where your `docs.json` file is located, and run the following command:
-
-```bash
 mint dev
-```
-
-A local preview of your documentation will be available at `http://localhost:3000`.
-
-</Step>
-</Steps>
-
-## Custom ports
-
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
-
-```bash
-mint dev --port 3333
-```
-
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
-
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
-
-## Mintlify versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
-
-```bash
-npm mint update
-```
-
-## Validating links
-
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
-
-```bash
 mint broken-links
 ```
 
-## Deployment
+## Engineering conventions
 
-If the deployment is successful, you should see the following:
+- Keep the API layer thin. Business logic belongs in services.
+- Add new UI pages under `src/ui/pages/`, register routes in `src/ui/main.tsx`, and wire navigation from layout components.
+- Add REST endpoints in `source/api/http.py` or related API modules and expose matching frontend calls in `src/ui/services/api.ts`.
+- Add WebSocket message types only after updating both the server implementation and the documented protocol.
+- Add new MCP servers in `mcp_servers/servers/<name>/` and register them through the backend MCP manager.
+- Marketplace installs, hook compatibility, and direct package installs are handled by `source/services/marketplace/service.py` and the marketplace endpoints in `source/api/http.py`.
 
-<Frame>
-  <img src="/images/checks-passed.png" alt="Screenshot of a deployment confirmation message that says All checks have passed." style={{ borderRadius: '0.5rem' }} />
-</Frame>
+## Testing expectations
 
-## Code formatting
+- Add regression tests for bug fixes.
+- Keep backend tests aligned with `source/` module boundaries.
+- Keep frontend tests aligned with `src/ui/` behavior and routing.
+- Update documentation in the same PR when a user-facing flow or contract changes.
 
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
+## Related guides
 
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
-  </Accordion>
-
-  <Accordion title="Issue: Encountering an unknown error">
-  
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
-  </Accordion>
-</AccordionGroup>
-
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+- [Architecture](/reference/architecture)
+- [Configuration](/reference/configuration)
+- [API reference](/reference/api-reference)
+- [Contributing](/reference/contributing)

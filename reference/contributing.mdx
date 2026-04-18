@@ -1,0 +1,61 @@
+---
+title: "Contributing"
+description: "Open focused pull requests for Xpdite with the right setup, quality gates, and documentation updates."
+---
+
+## Contribution workflow
+
+1. Fork and clone the repository.
+2. Create a focused branch from the latest main branch.
+3. Implement the change with tests and documentation updates.
+4. Run local quality checks.
+5. Open a pull request with clear validation notes.
+
+## Setup
+
+```bash
+git clone https://github.com/<your-user>/xpdite.git
+cd xpdite
+bun install
+bun run install:python
+```
+
+## Pull request requirements
+
+- Use a clear title and problem statement.
+- Explain why the change is needed.
+- Keep scope focused.
+- Include screenshots for UI changes.
+- Update contracts and docs when behavior changes.
+
+## Coding expectations
+
+- Keep API modules thin and push logic into services.
+- Preserve type safety in Python and TypeScript.
+- Avoid broad refactors unless the scope explicitly calls for them.
+- Add regression tests for bug fixes.
+
+## Commit style
+
+Preferred prefixes:
+
+- `feat:`
+- `fix:`
+- `refactor:`
+- `docs:`
+- `test:`
+- `chore:`
+
+## Areas that commonly need help
+
+- Cross-platform robustness
+- MCP reliability and new tool integrations
+- Mobile bridge edge cases
+- Startup and performance work
+- Test coverage expansion
+
+## Related docs
+
+- [Development](/development)
+- [Architecture](/reference/architecture)
+- [API reference](/reference/api-reference)

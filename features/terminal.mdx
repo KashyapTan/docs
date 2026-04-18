@@ -1,0 +1,66 @@
+---
+title: "Terminal"
+description: "Run commands through Xpdite with approval controls, interactive sessions, and streamed output."
+---
+
+## Capability summary
+
+- Run shell commands through inline tools
+- Approve or deny execution from the chat UI
+- Use interactive PTY sessions when needed
+- Stream output back into the conversation timeline
+
+## Approval model
+
+Terminal safety is controlled by ask levels.
+
+| Level | Behavior |
+|---|---|
+| `always` | Ask before every command |
+| `on-miss` | Ask unless the command matches remembered approvals |
+| `off` | Do not prompt for approval |
+
+Relevant endpoints:
+
+- `GET /api/terminal/settings`
+- `PUT /api/terminal/settings/ask-level`
+- `DELETE /api/terminal/approvals`
+
+## Session behavior
+
+- Commands can run as one-off calls or as ongoing PTY sessions.
+- Session mode is useful for workflows that need follow-up input.
+- Output streams back into the chat timeline and is stored as terminal events.
+
+## WebSocket controls
+
+Client control messages include:
+
+- `terminal_approval_response`
+- `terminal_session_response`
+- `terminal_stop_session`
+- `terminal_kill_command`
+- `terminal_set_ask_level`
+- `terminal_resize`
+
+Server events include:
+
+- `terminal_approval_request`
+- `terminal_session_request`
+- `terminal_session_started`
+- `terminal_session_ended`
+- `terminal_running_notice`
+- `terminal_output`
+- `terminal_command_complete`
+
+## Safety notes
+
+- Keep terminal approval enabled in untrusted prompt contexts.
+- Terminal execution is inline because approvals, PTY streaming, and persistence need access to app state and WebSocket connections.
+- Output is truncated and normalized for stability.
+
+## Related docs
+
+- [Security](/reference/security)
+- [API reference](/reference/api-reference)
+- [MCP guide](/integrations/mcp-guide)

@@ -1,0 +1,70 @@
+---
+title: "Security"
+description: "Review Xpdite's local-first trust model, guarded APIs, credential handling, and tool-execution controls."
+---
+
+## Threat model
+
+Xpdite is primarily a single-user local desktop app.
+
+The highest-risk areas are:
+
+- unsafe tool execution
+- unauthorized local process access
+- credential leakage
+- path traversal or filesystem escape
+
+## Core controls
+
+### API boundaries
+
+- The backend binds to loopback by default.
+- Sensitive artifact routes enforce loopback and session-token checks.
+- Marketplace routes use the same loopback and session-token protection model.
+- Internal mobile routes are intended only for the local Channel Bridge.
+- Non-loopback binding expands the trust boundary and requires external hardening.
+
+### Session token protection
+
+- Electron generates a random server token at runtime.
+- Guarded artifact routes use `X-Xpdite-Server-Token` when token protection is active.
+
+### Renderer isolation
+
+- Renderer Node integration is disabled.
+- Context isolation is enabled.
+- Privileged operations are exposed only through the preload bridge.
+
+### Credential handling
+
+- Provider API keys are encrypted before persistence.
+- Google OAuth tokens live in the user data directory.
+- Mobile channel tokens are sensitive local secret material and should be protected by OS account isolation and disk encryption.
+
+### Filesystem and tool execution
+
+- Memory paths are validated against traversal, absolute paths, and invalid extensions.
+- Artifact and memory writes are restricted to controlled roots.
+- Terminal execution is approval-gated and centrally intercepted.
+- Tool outputs are sanitized and truncated for stability.
+- Third-party marketplace packages should be reviewed before installation even when they come from a verified registry source.
+
+## Recommended hardening
+
+- Keep the app and dependencies updated.
+- Do not run the app with elevated OS privileges unless required.
+- Protect the Windows account and disk that hold `XPDITE_USER_DATA_DIR`.
+- Rotate or revoke cloud provider keys when they are no longer needed.
+- Keep internal bridge and backend services on loopback interfaces.
+
+## Current limitations
+
+- Internal mobile routes rely on loopback exposure rather than endpoint authentication.
+- Channel Bridge endpoints should be treated as trusted-local surfaces.
+- Some secrets are persisted locally for runtime integration and should be handled accordingly.
+
+## Related docs
+
+- [Operations](/reference/operations)
+- [Configuration](/reference/configuration)
+- [API reference](/reference/api-reference)

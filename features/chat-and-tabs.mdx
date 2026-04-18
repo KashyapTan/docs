@@ -1,0 +1,65 @@
+---
+title: "Chat and tabs"
+description: "Learn how Xpdite handles isolated tab sessions, queues, screenshots, and conversation actions."
+---
+
+## Core flow
+
+1. Xpdite sends `submit_query` over WebSocket with a `tab_id`.
+2. The backend enqueues the request for that tab.
+3. The selected provider streams text, reasoning, and tool events.
+4. The renderer updates the active tab in real time.
+
+## Tab model
+
+- The frontend currently allows up to `10` open tabs.
+- The backend tab manager supports up to `50` tabs.
+- Each tab has isolated chat history, queue state, and screenshot context.
+- Closing a tab removes its live session state without affecting other tabs.
+
+## Queue model
+
+- Each tab has its own queue.
+- The queue size is `5` items per tab.
+- Queue-related events include `query_queued`, `queue_updated`, and `queue_full`.
+- Local Ollama requests may still wait behind the global Ollama serializer even after they leave the per-tab queue.
+
+## Conversation actions
+
+Xpdite supports more than plain submit flows.
+
+- `retry_message` reruns an assistant turn.
+- `edit_message` replaces a prior user message and rebuilds the saved turn.
+- `resume_conversation` reloads a prior chat into the active tab.
+- `load_conversation`, `delete_conversation`, and `search_conversations` power the history view.
+
+## Screenshot context
+
+- `Alt + .` captures a screenshot into the active tab.
+- Screenshots are scoped to a single tab.
+- Screenshot events include `screenshot_start`, `screenshot_added`, `screenshot_removed`, and `screenshots_cleared`.
+- Fullscreen and precision capture are integrated into chat submission flows rather than treated as a separate product surface.
+
+## File attachments
+
+- Type `@` in the input to open the file picker.
+- Xpdite ranks attachment results globally from its indexed search root.
+- Up to `10` attached files are forwarded with a submitted query.
+- Text files are read and injected as context.
+- Image attachments can be included as multimodal context.
+
+Relevant endpoint:
+
+- `GET /api/files/browse`
+
+## History and search
+
+- Conversation history is persisted in SQLite.
+- Xpdite can list, search, resume, and delete saved conversations from the history view.
+- Response versions are tracked per assistant message so retry and edit flows can preserve earlier outputs.
+
+## Related docs
+
+- [Features overview](/features/overview)
+- [API reference](/reference/api-reference)
+- [Architecture](/reference/architecture)

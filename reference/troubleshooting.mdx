@@ -1,0 +1,77 @@
+---
+title: "Troubleshooting"
+description: "Diagnose startup, model, tool, mobile, and data issues in Xpdite."
+---
+
+## App does not finish booting
+
+Check the following:
+
+1. Probe `GET /api/health` on ports `8000` through `8009`.
+2. Confirm Python `3.13+` and dependencies are installed.
+3. Restart the app to clear stale processes.
+
+Useful dev commands:
+
+```bash
+bun run dev:pyserver
+bun run dev:react
+bun run dev:electron
+```
+
+## Ollama models do not appear
+
+- Make sure the Ollama daemon is running.
+- Verify `ollama pull <model>` succeeds.
+- Refresh models from **Settings**.
+
+## Cloud models fail to load
+
+- Re-save the provider API key.
+- Check `GET /api/keys` for the provider's key status.
+- Verify network access to the provider.
+
+## Tool calls are missing
+
+- Check `GET /api/mcp/servers`.
+- Review tool retrieval settings such as `always_on` and `top_k`.
+- Confirm the expected server is actually implemented, not just present as a stub directory.
+
+## Mobile pairing or delivery fails
+
+- Verify bridge health and status endpoints.
+- Regenerate a pairing code and retry `/pair`.
+- Re-save platform config in **Settings**.
+- Enable `XPDITE_MOBILE_DEBUG_LOGS=1` if you need more detail.
+
+## Scheduled jobs do not run
+
+- Confirm the scheduler started during boot.
+- Verify the cron expression and timezone.
+- Use the `run-now` path to validate job execution and delivery.
+
+## Artifact API access fails
+
+- Make sure the request is loopback-originated.
+- Include `X-Xpdite-Server-Token` when token protection is enabled.
+- Verify Electron is passing the runtime token correctly.
+
+## Suspected data corruption
+
+1. Back up `user_data/`.
+2. Inspect the SQLite database and memory files.
+3. Reproduce the issue in development with focused logging.
+
+## Last-resort reset
+
+If you need a clean local state, back up and then remove the target `user_data/` directory.
+
+<Warning>
+  This deletes local history, artifacts, memories, settings, and cached integration state.
+</Warning>
+
+## Related docs
+
+- [Quickstart](/quickstart)
+- [Operations](/reference/operations)
+- [Configuration](/reference/configuration)

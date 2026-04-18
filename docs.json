@@ -1,68 +1,79 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Xpdite",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#F59E0B",
+    "light": "#FBBF24",
+    "dark": "#B45309"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/logo/xpdite-logo-transparent.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Product",
         "groups": [
           {
             "group": "Getting started",
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "features/overview"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Core workflows",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "features/chat-and-tabs",
+              "features/models-and-providers",
+              "features/skills",
+              "features/terminal",
+              "features/memory"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Power features",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "features/artifacts",
+              "features/scheduled-jobs",
+              "features/meeting-recorder",
+              "features/notifications"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Integrations",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "integrations/marketplace",
+              "integrations/mcp-guide",
+              "integrations/mobile-bridge"
+            ]
+          },
+          {
+            "group": "Operate safely",
+            "pages": [
+              "reference/operations",
+              "reference/security",
+              "reference/troubleshooting"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Architecture and config",
             "pages": [
-              "api-reference/introduction"
+              "reference/architecture",
+              "reference/configuration",
+              "reference/api-reference"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Build and contribute",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "development",
+              "reference/contributing"
             ]
           }
         ]
@@ -71,33 +82,33 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "GitHub",
+          "href": "https://github.com/KashyapTan/Xpdite",
+          "icon": "github"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Releases",
+          "href": "https://github.com/KashyapTan/Xpdite/releases",
+          "icon": "download"
         }
       ]
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/xpdite-logo-transparent.svg",
+    "dark": "/logo/xpdite-logo-black-bg.svg"
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "GitHub",
+        "href": "https://github.com/KashyapTan/Xpdite"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Download",
+      "href": "https://github.com/KashyapTan/Xpdite/releases"
     }
   },
   "contextual": {
@@ -106,7 +117,6 @@
      "view",
      "chatgpt",
      "claude",
-     "perplexity",
      "mcp",
      "cursor",
      "vscode"
@@ -114,9 +124,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/KashyapTan/Xpdite"
     }
   }
 }

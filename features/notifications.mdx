@@ -1,0 +1,38 @@
+---
+title: "Notifications"
+description: "Track background completions, failures, and scheduled job outcomes."
+---
+
+## Purpose
+
+Notifications provide a global inbox for asynchronous events that happen outside the active turn.
+
+## Common notification types
+
+- `job_complete`
+- `job_error`
+- `tab_complete`
+
+## Delivery model
+
+- Notifications are persisted in SQLite.
+- They are broadcast to the renderer through WebSocket events.
+- The frontend can combine persisted counts with live events to keep badge state accurate.
+
+WebSocket events:
+
+- `notification_added`
+- `notification_dismissed`
+- `notifications_cleared`
+
+## Relevant endpoints
+
+- `GET /api/notifications`
+- `GET /api/notifications/count`
+- `DELETE /api/notifications/{notification_id}`
+- `DELETE /api/notifications`
+
+## Related docs
+
+- [Scheduled jobs](/features/scheduled-jobs)
+- [API reference](/reference/api-reference)

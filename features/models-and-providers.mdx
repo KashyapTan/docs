@@ -1,0 +1,67 @@
+---
+title: "Models and providers"
+description: "Configure Ollama and cloud providers, manage enabled models, and understand runtime behavior."
+---
+
+## Provider types
+
+- **Local**: Ollama
+- **Cloud**: Anthropic, OpenAI, Gemini, OpenRouter
+
+## How model selection works
+
+- Xpdite stores an enabled-model list in settings.
+- You can narrow the visible model list in **Settings**.
+- Requests can still choose a specific model per turn.
+- Sub-agent tiers can map fast and smart execution to different models.
+
+## Credentials
+
+Cloud credentials are managed through provider-specific key endpoints and the settings UI.
+
+| Provider | Requires key | Notes |
+|---|---|---|
+| Ollama | No | Requires a local Ollama daemon and an installed model |
+| Anthropic | Yes | Models load only when a valid key exists |
+| OpenAI | Yes | Filtered to supported chat-capable models |
+| Gemini | Yes | Embedding and legacy model families are filtered out |
+| OpenRouter | Yes | Tool-capable models are exposed through the app |
+
+## Common setup paths
+
+### Use Ollama locally
+
+```bash
+ollama pull qwen3-vl:8b-instruct
+```
+
+After the model is installed, refresh models in **Settings** if the list does not update immediately.
+
+### Use cloud providers
+
+1. Open **Settings**.
+2. Save the API key for the provider you want to use.
+3. Enable the models you want available in the selector.
+
+## Runtime notes
+
+- Local Ollama requests may be serialized globally for GPU stability.
+- Cloud provider requests stream through their provider integration and can run concurrently.
+- Enabled model state is stored in the settings database, not hardcoded in the frontend.
+
+## Relevant endpoints
+
+- `GET /api/models/ollama`
+- `GET /api/models/ollama/info/{model_name:path}`
+- `GET /api/models/enabled`
+- `PUT /api/models/enabled`
+- `GET /api/models/{provider}`
+- `GET /api/keys`
+- `PUT /api/keys/{provider}`
+- `DELETE /api/keys/{provider}`
+
+## Related docs
+
+- [Quickstart](/quickstart)
+- [API reference](/reference/api-reference)
+- [Configuration](/reference/configuration)

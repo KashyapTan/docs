@@ -1,0 +1,62 @@
+---
+title: "Artifacts"
+description: "Persist generated code, markdown, and HTML outputs as structured records."
+---
+
+## Purpose
+
+Artifacts let Xpdite keep generated outputs as standalone, renderable units instead of leaving them buried inside message history.
+
+## Supported types
+
+- `code`
+- `markdown`
+- `html`
+
+## Lifecycle
+
+1. Xpdite detects artifact blocks while a response is streaming.
+2. Metadata is written to SQLite.
+3. Content is stored based on type.
+
+| Type | Storage |
+|---|---|
+| `html` | Inline in the database |
+| `code` | Files under `user_data/artifacts/code/` |
+| `markdown` | Files under `user_data/artifacts/markdown/` |
+
+## Metadata
+
+Artifact records can include:
+
+- `id`
+- `type`
+- `title`
+- `language`
+- `size_bytes`
+- `line_count`
+- `status`
+- `conversation_id`
+- `message_id`
+- timestamps
+
+## Relevant endpoints
+
+- `GET /api/artifacts`
+- `GET /api/artifacts/conversation/{conversation_id}`
+- `GET /api/artifacts/{artifact_id}`
+- `POST /api/artifacts`
+- `PUT /api/artifacts/{artifact_id}`
+- `DELETE /api/artifacts/{artifact_id}`
+
+## Security notes
+
+- Artifact routes are loopback-restricted.
+- When a runtime server token is configured, requests must include `X-Xpdite-Server-Token`.
+- Deletes are destructive for API consumers even if the internal lifecycle uses soft-delete status markers.
+
+## Related docs
+
+- [Security](/reference/security)
+- [API reference](/reference/api-reference)
+- [Features overview](/features/overview)

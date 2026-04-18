@@ -1,0 +1,61 @@
+---
+title: "Scheduled jobs"
+description: "Run AI tasks on cron schedules or one-shot timers and deliver results back into Xpdite."
+---
+
+## What scheduled jobs do
+
+Scheduled jobs run AI instructions automatically through the same conversation pipeline used for manual chat.
+
+## Execution model
+
+- Xpdite uses APScheduler through `AsyncIOScheduler`.
+- Jobs are persisted in SQLite.
+- Each run executes in an isolated scheduled-job context.
+- One-shot jobs disable themselves after a successful run.
+
+## Key fields
+
+| Field | Purpose |
+|---|---|
+| `name` | Human-readable job label |
+| `cron_expression` | Recurring schedule |
+| `instruction` | Prompt executed when the job fires |
+| `timezone` | Schedule timezone |
+| `model` | Optional per-job model override |
+| `delivery_platform` | Optional mobile delivery target |
+| `delivery_sender_id` | Optional mobile recipient |
+| `enabled` | On or off |
+| `is_one_shot` | Run once or on a schedule |
+
+## Lifecycle
+
+1. Create the job.
+2. Scheduler stores and schedules it.
+3. The job fires on its cron expression or one-shot time.
+4. Xpdite runs the instruction through the normal conversation flow.
+5. Notifications and optional mobile delivery are emitted.
+
+## Relevant endpoints
+
+- `GET /api/scheduled-jobs`
+- `GET /api/scheduled-jobs/{job_id}`
+- `POST /api/scheduled-jobs`
+- `PUT /api/scheduled-jobs/{job_id}`
+- `DELETE /api/scheduled-jobs/{job_id}`
+- `POST /api/scheduled-jobs/{job_id}/pause`
+- `POST /api/scheduled-jobs/{job_id}/resume`
+- `POST /api/scheduled-jobs/{job_id}/run-now`
+- `GET /api/scheduled-jobs/conversations`
+- `GET /api/scheduled-jobs/{job_id}/conversations`
+
+## Delivery behavior
+
+- Results can stay inside Xpdite.
+- If a delivery target is configured, output is relayed to a mobile channel as best effort.
+
+## Related docs
+
+- [Notifications](/features/notifications)
+- [Mobile Bridge](/integrations/mobile-bridge)
+- [API reference](/reference/api-reference)

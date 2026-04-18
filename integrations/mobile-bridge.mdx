@@ -1,0 +1,78 @@
+---
+title: "Mobile Bridge"
+description: "Connect Telegram, Discord, and WhatsApp to Xpdite through the local Channel Bridge service."
+---
+
+## Supported platforms
+
+- Telegram
+- Discord
+- WhatsApp
+
+## High-level flow
+
+### Inbound
+
+1. A platform adapter receives a message.
+2. The bridge normalizes and deduplicates the payload.
+3. The bridge forwards it to the backend internal mobile API.
+4. The backend maps it into a mobile session and enqueues it like a normal request.
+
+### Outbound
+
+1. The backend posts relay callbacks to the bridge.
+2. The bridge sends or edits the platform message.
+3. Streaming updates can be reflected through outbound edit flows.
+
+## Pairing and sessions
+
+- Device pairing uses `/pair <code>`.
+- Paired devices are stored in the backend database.
+- Sessions map a sender identity to a stable Xpdite tab context.
+
+## Bridge endpoints
+
+- `GET /health`
+- `GET /status`
+- `POST /outbound`
+- `POST /outbound/edit`
+- `POST /outbound/typing`
+
+## Internal backend endpoints
+
+- `POST /internal/mobile/message`
+- `POST /internal/mobile/command`
+- `POST /internal/mobile/pair/verify`
+- `POST /internal/mobile/pair/check`
+- `POST /internal/mobile/pair/generate`
+- `GET /internal/mobile/devices`
+- `DELETE /internal/mobile/devices/{device_id}`
+- `POST /internal/mobile/whatsapp/connection`
+- `GET /internal/mobile/sessions`
+- `GET /internal/mobile/session/{platform}/{sender_id}`
+- `DELETE /internal/mobile/session/{platform}/{sender_id}`
+- `GET /internal/mobile/health`
+- `POST /internal/mobile/cleanup`
+
+## Supported commands
+
+- `/pair <code>`
+- `/new`
+- `/stop`
+- `/status`
+- `/model <name>`
+- `/default <name>`
+- `/help`
+
+## Security notes
+
+- Keep both the bridge and backend on loopback interfaces.
+- Do not expose `/internal/mobile/*` routes through a public reverse proxy.
+- Treat bridge endpoints as trusted-local integration surfaces, not public APIs.
+- Stop the Channel Bridge if you do not need mobile channels enabled.
+
+## Related docs
+
+- [Scheduled jobs](/features/scheduled-jobs)
+- [Security](/reference/security)
+- [API reference](/reference/api-reference)

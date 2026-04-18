@@ -1,0 +1,63 @@
+---
+title: "Meeting recorder"
+description: "Record meetings, stream transcripts, generate analysis, and act on the results."
+---
+
+## Capabilities
+
+- Start and stop meeting recording sessions
+- Stream transcript chunks into the UI
+- Persist recordings and transcript metadata
+- Generate AI analysis and execute suggested actions
+
+## Typical flow
+
+1. Start a recording from the meeting recorder view.
+2. Stream audio chunks into the backend.
+3. Watch transcript chunks arrive in real time.
+4. Stop recording and let Xpdite finish processing.
+5. Generate analysis or execute follow-up actions from the saved recording.
+
+## WebSocket request types
+
+- `meeting_start_recording`
+- `meeting_stop_recording`
+- `meeting_audio_chunk`
+- `get_meeting_recordings`
+- `load_meeting_recording`
+- `delete_meeting_recording`
+- `search_meeting_recordings`
+- `meeting_get_status`
+- `meeting_get_compute_info`
+- `meeting_get_settings`
+- `meeting_update_settings`
+- `meeting_generate_analysis`
+- `meeting_execute_action`
+
+## WebSocket events
+
+- `meeting_recording_started`
+- `meeting_recording_stopped`
+- `meeting_transcript_chunk`
+- `meeting_recordings_list`
+- `meeting_recording_loaded`
+- `meeting_recording_deleted`
+- `meeting_recording_status`
+- `meeting_recording_error`
+- `meeting_processing_progress`
+- `meeting_compute_info`
+- `meeting_settings`
+- `meeting_analysis_started`
+- `meeting_analysis_complete`
+- `meeting_analysis_error`
+- `meeting_action_result`
+
+## Data notes
+
+- Recordings and transcript metadata are persisted in backend storage.
+- Analysis settings can be stored and reused between runs.
+
+## Related docs
+
+- [API reference](/reference/api-reference)
+- [Features overview](/features/overview)

@@ -1,0 +1,85 @@
+---
+title: "Architecture"
+description: "Review the four-runtime design, boot sequence, data model, and isolation boundaries behind Xpdite."
+---
+
+## System overview
+
+Xpdite is a desktop-first system composed of four cooperating runtimes:
+
+1. **Electron host** in `src/electron/`
+2. **React renderer** in `src/ui/`
+3. **Python backend** in `source/`
+4. **Mobile Channel Bridge** in `src/channel-bridge/`
+
+## Runtime layers
+
+### Electron
+
+- Owns the always-on-top window
+- Starts and monitors the Python backend
+- Starts the Channel Bridge after the backend is healthy
+- Exposes a minimal IPC surface through the preload layer
+
+### React renderer
+
+- Owns chat, tabs, settings, history, meeting views, and streaming UI
+- Routes tab-scoped chat state over one WebSocket connection
+- Uses REST for configuration and stored data retrieval
+
+### Python backend
+
+- Exposes FastAPI REST and WebSocket APIs
+- Orchestrates conversation queues and provider routing
+- Executes subprocess MCP servers and inline tools
+- Persists data to SQLite and the filesystem
+- Runs scheduler, memory, artifact, and notification services
+
+### Channel Bridge
+
+- Connects Telegram, Discord, and WhatsApp
+- Bridges inbound and outbound messages over local HTTP APIs
+- Uses a generated `mobile_channels_config.json` snapshot for runtime config
+
+## Boot sequence
+
+1. Electron renders a lightweight boot shell.
+2. Electron starts the Python process.
+3. Python emits structured boot markers.
+4. Electron probes `GET /api/health` on ports `8000` through `8009`.
+5. After backend health passes, Electron starts the Channel Bridge.
+6. The renderer transitions into the full app.
+
+## Data and persistence
+
+### SQLite
+
+`user_data/xpdite_app.db` stores:
+
+- conversations and messages
+- artifacts metadata
+- scheduled jobs and notifications
+- mobile devices and sessions
+- encrypted provider keys and other settings
+
+### Filesystem-backed data
+
+- `user_data/artifacts/`
+- `user_data/memory/`
+- `user_data/skills/`
+- `user_data/screenshots/`
+
+## Concurrency and isolation
+
+- Requests are tab-scoped.
+- Each tab has its own queue.
+- Local Ollama requests are serialized for stability.
+- Blocking work is offloaded to the backend thread pool.
+- Request, tab, and model identity are propagated through ContextVars.
+
+## Related docs
+
+- [Configuration](/reference/configuration)
+- [API reference](/reference/api-reference)
+- [MCP guide](/integrations/mcp-guide)
+- [Mobile Bridge](/integrations/mobile-bridge)

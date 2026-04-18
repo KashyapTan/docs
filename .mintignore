@@ -6,3 +6,11 @@
 drafts/
 *.draft.mdx
 Xpdite/
+
+# Leftover local assets not used by the public Xpdite docs
+images/checks-passed.png
+images/hero-dark.png
+images/hero-light.png
+images/xpdite/
+logo/dark.svg
+logo/light.svg

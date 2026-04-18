@@ -1,0 +1,108 @@
+---
+title: "MCP guide"
+description: "Understand Xpdite's subprocess MCP servers, inline tools, retrieval settings, and extension paths."
+---
+
+## MCP in Xpdite
+
+Xpdite uses MCP to expose filesystem, search, web, integration, and execution capabilities to models.
+
+Two execution modes exist:
+
+- **Subprocess MCP servers** over stdio JSON-RPC
+- **Inline tools** executed directly inside backend tool loops
+
+## Tool retrieval
+
+Xpdite does not include every tool on every request by default.
+
+- Semantic retrieval ranks candidate tools per query.
+- `top_k` controls how many candidates are considered.
+- `always_on` tools are forced into the request.
+
+Relevant endpoints:
+
+- `GET /api/settings/tools`
+- `PUT /api/settings/tools`
+- `GET /api/mcp/servers`
+
+## Current topology
+
+### Active subprocess servers
+
+- `filesystem`
+- `glob`
+- `grep`
+- `websearch`
+- `windows_mcp`
+- `gmail` and `calendar` after Google auth
+
+### Inline tool servers
+
+- `terminal`
+- `sub_agent`
+- `video_watcher`
+- `skills`
+- `memory`
+- `scheduler`
+
+### External connectors
+
+External connectors are out-of-process MCP servers managed separately from bundled `mcp_servers/servers/*`.
+
+- They appear in **Settings** > **Connections**.
+- Their enabled state persists across restarts.
+- The current shipped connector registry includes the `everything` demo server.
+- Figma and Slack examples exist as commented templates in code, not as active production connectors.
+
+### Marketplace-installed components
+
+Marketplace installs can also contribute skills, plugins, hooks, and MCP runtime manifests. They are managed through the marketplace API and settings UI rather than the static bundled server list.
+
+<Note>
+  Placeholder directories such as `github`, `jira`, `slack`, `teams`, `whatsapp`, and others inside `mcp_servers/servers/` are not documented here as production-ready features because the current checkout only contains stubs.
+</Note>
+
+## Provider behavior
+
+### Ollama path
+
+- Performs a tool-detection pass.
+- Runs iterative tool rounds up to the configured maximum.
+- Streams follow-up text between tool calls.
+
+### Cloud path
+
+- Streams through provider integrations.
+- Executes tool calls as they are emitted.
+- Continues text and tool rounds until completion.
+
+## Extend Xpdite
+
+### Add a subprocess server
+
+1. Create `mcp_servers/servers/<name>/server.py`.
+2. Register the connection in the backend MCP manager.
+3. Verify that the server appears in `GET /api/mcp/servers`.
+4. Update tool-call presentation in the frontend if needed.
+
+### Add an inline tool server
+
+1. Define schemas in `mcp_servers/servers/<name>/inline_tools.py`.
+2. Register the tools in the backend manager.
+3. Intercept execution in both the Ollama and cloud paths.
+4. Implement the executor and any service-layer logic.
+
+### Use the marketplace instead of editing code
+
+If you are not shipping a core product feature, the marketplace is often the better path. It can install:
+
+- Claude-compatible skills
+- Claude-compatible plugins
+- MCP bundles from curated catalogs, direct repos, or direct `npx` and `uvx` package specs
+
+## Related docs
+
+- [API reference](/reference/api-reference)
+- [Architecture](/reference/architecture)
+- [Development](/development)

@@ -1,0 +1,100 @@
+---
+title: "Marketplace"
+description: "Install Claude-compatible skills, plugins, and MCP bundles from built-in or custom sources."
+---
+
+## What the marketplace does
+
+The Xpdite marketplace lets you install extension components without editing the bundled app code.
+
+Supported item kinds:
+
+- `skill`
+- `plugin`
+- `mcp`
+
+## Built-in sources
+
+The marketplace seeds built-in sources on startup.
+
+| Source | Purpose |
+|---|---|
+| Anthropic Plugins | Official Claude-compatible plugin catalog |
+| Anthropic Skills | Official Claude-compatible skills catalog |
+| Official MCP Registry | Official and verified MCP registry entries |
+| Xpdite Curated | Xpdite-specific curated entries |
+
+You can also add your own source URLs, GitHub repos, or local manifest paths.
+
+## Installation paths
+
+### Catalog install
+
+Install an item from a configured marketplace source.
+
+### Direct repo install
+
+Install from:
+
+- a GitHub repo
+- a GitHub URL
+- a local path
+
+Xpdite can recognize Claude-style marketplaces, plugin repos, standalone `SKILL.md` skills, and `.mcp.json` definitions.
+
+### Direct package install
+
+Install MCP packages directly from:
+
+- `npx`
+- `uvx`
+
+The package input can include args and secret placeholders such as `${OPENAI_API_KEY}`.
+
+## Secrets and auth
+
+- The marketplace detects required secrets from manifests and runtime metadata.
+- The UI prompts for missing secrets during install or later configuration.
+- Missing secrets can leave an item in `manual_auth_required` state until you provide them.
+
+## Runtime behavior
+
+- Installed items can be enabled, disabled, updated, or removed.
+- Marketplace plugins may contribute slash commands, skills, MCP runtime manifests, and hook handlers.
+- Hook runtime status is surfaced in the UI instead of failing silently.
+- Compatibility warnings are shown for unsupported or partially supported features.
+
+Examples of compatibility caveats surfaced by the runtime:
+
+- Claude agents are not yet surfaced in Xpdite.
+- Some plugin output styles or MCP resources are preserved in metadata but not exposed directly in the UI.
+- A plugin with no runnable skills, commands, MCP servers, or hooks is flagged clearly.
+
+## Access model
+
+- Marketplace routes are local-only.
+- They use the same guarded access model as artifact routes.
+- Requests may require `X-Xpdite-Server-Token`.
+
+## Marketplace endpoints
+
+- `GET /api/marketplace/sources`
+- `POST /api/marketplace/sources`
+- `DELETE /api/marketplace/sources/{source_id}`
+- `POST /api/marketplace/sources/{source_id}/refresh`
+- `GET /api/marketplace/catalog`
+- `GET /api/marketplace/installs`
+- `POST /api/marketplace/install`
+- `POST /api/marketplace/install-package`
+- `POST /api/marketplace/install-repo`
+- `POST /api/marketplace/installs/{install_id}/enable`
+- `POST /api/marketplace/installs/{install_id}/disable`
+- `POST /api/marketplace/installs/{install_id}/update`
+- `DELETE /api/marketplace/installs/{install_id}`
+- `PUT /api/marketplace/installs/{install_id}/secrets`
+
+## Related docs
+
+- [MCP guide](/integrations/mcp-guide)
+- [Security](/reference/security)
+- [API reference](/reference/api-reference)
